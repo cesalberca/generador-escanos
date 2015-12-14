@@ -6,6 +6,12 @@ FILE *txtFile;
 struct Provincia {
   char nombre[100];
   int diputados;
+  int votosPP = 0;
+  int votosPsoe = 0;
+  int votosIu = 0;
+  int votosUpyd = 0;
+  int votosPodemos = 0;
+  int votosCiudadanos = 0;
 };
 
 struct Partido {
