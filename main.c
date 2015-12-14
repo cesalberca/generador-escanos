@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
   struct Provincia gerona = {"Gerona", 6};
   struct Provincia guipuzcoa = {"Guipuzcoa", 6};
   struct Provincia toledo = {"Toledo", 6};
-  struct Provincia almeria = {"Almeria", 6};
+  struct Provincia almeria = {"Almeria", 6};*/
   struct Provincia badajoz = {"Badajoz", 6};
   struct Provincia jaen = {"Jaen", 6};
   struct Provincia navarra = {"Navarra", 5};
