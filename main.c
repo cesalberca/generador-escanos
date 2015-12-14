@@ -25,13 +25,13 @@ void importTxt();
 int main(int argc, char *argv[]) {
 
   struct Provincia madrid = {"Madrid", 36};
-  /*struct Provincia barcelona = {"Barcelona", 31};
+  struct Provincia barcelona = {"Barcelona", 31};
   struct Provincia valencia = {"Valencia", 16};
   struct Provincia alicante = {"Alicante", 12};
   struct Provincia sevilla = {"Sevilla", 12};
-  struct Provincia malaga = {"Malaga", 10};*/
+  struct Provincia malaga = {"Malaga", 10};
   struct Provincia murcia = {"Murcia", 10};
-  /*struct Provincia cadiz = {"Cadiz", 8};
+  struct Provincia cadiz = {"Cadiz", 8};
   struct Provincia vizcaya = {"Vizcaya", 8};
   struct Provincia laCoruna = {"La Coruna", 8};
   struct Provincia palmas = {"Las Palmas", 8};
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
   struct Provincia toledo = {"Toledo", 6};
   struct Provincia almeria = {"Almeria", 6};*/
   struct Provincia badajoz = {"Badajoz", 6};
-  /*struct Provincia jaen = {"Jaen", 6};
+  struct Provincia jaen = {"Jaen", 6};
   struct Provincia navarra = {"Navarra", 5};
   struct Provincia castellon = {"Castellon", 5};
   struct Provincia cantabria = {"Cantabria", 5};
@@ -55,9 +55,9 @@ int main(int argc, char *argv[]) {
   struct Provincia ciudadReal = {"Ciudad Real", 5};
   struct Provincia huelva = {"Huelva", 5};
   struct Provincia leon = {"Leon", 5};
-  struct Provincia lerida = {"Lerida", 4};*/
+  struct Provincia lerida = {"Lerida", 4};
   struct Provincia caceres = {"Caceres", 4};
-  /*struct Provincia albacete = {"Albacete", 4};
+  struct Provincia albacete = {"Albacete", 4};
   struct Provincia burgos = {"Burgos", 4};
   struct Provincia salamanca = {"Salamanca", 4};
   struct Provincia lugo = {"Lugo", 4};
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
   struct Provincia teruel = {"Teruel", 3};
   struct Provincia soria = {"Soria", 2};
   struct Provincia ceuta = {"Ceuta", 1};
-  struct Provincia melilla = {"Melilla", 1};*/
+  struct Provincia melilla = {"Melilla", 1};
 
   provincias[0] = madrid;
   provincias[1] = barcelona;
