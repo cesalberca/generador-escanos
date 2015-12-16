@@ -13,28 +13,25 @@ struct Provincia {
   char votosUpyd[100];
   char votosPodemos[100];
   char votosCiudadanos[100];
-  int diputadosPP;
-  int diputadosPsoe;
-  int diputadosIu;
-  int diputadosUpyd;
-  int diputadosPodemos;
-  int diputadosCiudadanos;
+  int diputadosArray[6];
 };
 
 struct Provincia provincias[51];
 // Ya que los votos son recogidos en forma de caracter, éstos han de ser pasados a long para poder operar con ellos. Los guardamos en un array de long.
-long arrayVotos[50][6];
-// Usar otro array temporal para ordenar
+long arrayVotos[51][6];
+long tempArray[51][6];
+int arrayNombres[51][6];
 
 
 void inicializacionDiputados();
 void importTxt();
 void rellenarVotosProvincias();
+void inicializarNombresArray();
 void dhondt();
 void imprimirVotos();
 
 struct Provincia madrid = {"Madrid", 36};
-struct Provincia barcelona = {"Barcelona", 31};
+struct Provincia barcelona = {"Barcelona", 36};
 struct Provincia valencia = {"Valencia", 16};
 struct Provincia alicante = {"Alicante", 12};
 struct Provincia sevilla = {"Sevilla", 12};
@@ -140,23 +137,70 @@ int main(int argc, char *argv[]) {
 
 
   inicializacionDiputados();
+  inicializarNombresArray();
   importTxt();
   rellenarVotosProvincias();
   dhondt();
-  imprimirVotos();
+  // imprimirVotos();
 
+  printf("%s\n", provincias[0].nombre);
+  int i;
+  for (i = 0; i < 6; i++) {
+    switch (arrayNombres[0][i]) {
+      case 1:
+        printf("Diputados pp %i\n", provincias[0].diputadosArray[i]);
+      break;
+      case 2:
+        printf("Diputados psoe %i\n", provincias[0].diputadosArray[i]);
+      break;
+      case 3:
+        printf("Diputados iu %i\n", provincias[0].diputadosArray[i]);
+      break;
+      case 4:
+        printf("Diputados upyd %i\n", provincias[0].diputadosArray[i]);
+      break;
+      case 5:
+        printf("Diputados podemos %i\n", provincias[0].diputadosArray[i]);
+      break;
+      case 6:
+        printf("Diputados Ciudadanos %i\n", provincias[0].diputadosArray[i]);
+      break;
+    }
+  }
+
+  printf("%s\n", provincias[6].nombre);
+  for (i = 0; i < 6; i++) {
+    switch (arrayNombres[6][i]) {
+      case 1:
+        printf("Diputados pp %i\n", provincias[6].diputadosArray[i]);
+      break;
+      case 2:
+        printf("Diputados psoe %i\n", provincias[6].diputadosArray[i]);
+      break;
+      case 3:
+        printf("Diputados iu %i\n", provincias[6].diputadosArray[i]);
+      break;
+      case 4:
+        printf("Diputados upyd %i\n", provincias[6].diputadosArray[i]);
+      break;
+      case 5:
+        printf("Diputados podemos %i\n", provincias[6].diputadosArray[i]);
+      break;
+      case 6:
+        printf("Diputados Ciudadanos %i\n", provincias[45].diputadosArray[i]);
+      break;
+    }
+  }
 }
 
 void inicializacionDiputados() {
   int i;
   for (i = 0; i < 51; i++) {
-    // Inicializamos los diputados de cada partido a 0.
-    provincias[i].diputadosPP = 0;
-    provincias[i].diputadosPsoe = 0;
-    provincias[i].diputadosIu = 0;
-    provincias[i].diputadosUpyd = 0;
-    provincias[i].diputadosPodemos = 0;
-    provincias[i].diputadosCiudadanos = 0;
+    int j;
+    for (j = 0; j < 6; j++) {
+      // Inicializamos los diputados de cada partido a 0.
+      provincias[i].diputadosArray[j] = 0;
+    }
   }
 }
 
@@ -228,82 +272,91 @@ void rellenarVotosProvincias() {
     arrayVotos[i][3] = atol(provincias[i].votosUpyd);
     arrayVotos[i][4] = atol(provincias[i].votosPodemos);
     arrayVotos[i][5] = atol(provincias[i].votosCiudadanos);
+
+    tempArray[i][0] = arrayVotos[i][0];
+    tempArray[i][1] = arrayVotos[i][1];
+    tempArray[i][2] = arrayVotos[i][2];
+    tempArray[i][3] = arrayVotos[i][3];
+    tempArray[i][4] = arrayVotos[i][4];
+    tempArray[i][5] = arrayVotos[i][5];
+  }
+}
+
+void inicializarNombresArray() {
+  int i;
+  for (i = 0; i < 51; i++) {
+    int j;
+    for (j = 0; j < 6; j++) {
+      arrayNombres[i][j] = j + 1;
+    }
   }
 }
 
 void dhondt() {
-  char arrayNombres[6][100];
-  strcpy(arrayNombres[0], "PP");
-  strcpy(arrayNombres[1], "PSOE");
-  strcpy(arrayNombres[2], "IU");
-  strcpy(arrayNombres[3], "UPYD");
-  strcpy(arrayNombres[4], "Podemos");
-  strcpy(arrayNombres[5], "Ciudadanos");
-
-  long tempArray[50][6];
   long temp1;
-  char temp2[100];
-
+  int temp2;
+  int mayor;
   int i;
-  for (i = 0; i < 51; i++) {
-    int j;
-    for (j = 0; j < 7; j++) {
-      tempArray[i][j] = arrayVotos[i][j];
-    }
-  }
+  int j;
+  int k;
+  int l;
+  int m;
+  int n;
+  long cocientes[6];
+  long divisores[6];
 
-
-  int i;
   for (i = 0; i < 51; i++) {
     // Recorremos todo el array de estructuras reordenando los votos junto con los nombres de los partidos.
-    int j;
-    for (j = 0; j < 6; j++) {
-      int k;
-      for (k = 1 + j; k < 6; k++) {
-        if (tempArray[i][j] < tempArray[i][k]) {
-          temp1 = tempArray[i][k];
-          strcpy(temp2, arrayNombres[k]);
-
-          tempArray[i][k] = tempArray[i][j];
-          strcpy(arrayNombres[k], arrayNombres[j]);
-
-          tempArray[i][j] = temp1;
-          strcpy(arrayNombres[j], temp2);
-        }
-      }
-    }
+    // for (j = 0; j < 6; j++) {
+    //   for (k = 1 + j; k < 6; k++) {
+    //     if (tempArray[i][j] < tempArray[i][k]) {
+    //       temp1 = tempArray[i][k];
+    //       temp2 = arrayNombres[i][k];
+    //
+    //       tempArray[i][k] = tempArray[i][j];
+    //       arrayNombres[i][k] = arrayNombres[i][j];
+    //
+    //       tempArray[i][j] = temp1;
+    //       arrayNombres[i][j] = temp2;
+    //     }
+    //   }
+    // }
 
     // Dhondt se encargará de hacer las operaciones pertinentes. Es importante tenerlo dentro de esta función ya que vamos a machacar constantemente los nombres de los partidos. Lo ejecutamos dentro del for ya que vamos a ir rellenando los diputados posición a posición.
-    int cocientes[6];
-    int l;
-    for (l = 0; l < provincias[i].diputados; l++) {
-      cocientes[0] = tempArray[i][0] / (l + 1);
-      cocientes[1] = tempArray[i][1] / (l + 1);
-      cocientes[2] = tempArray[i][2] / (l + 1);
-      cocientes[3] = tempArray[i][3] / (l + 1);
-      cocientes[4] = tempArray[i][4] / (l + 1);
-      cocientes[5] = tempArray[i][5] / (l + 1);
+    for (l = 0; l < 6; l++) {
+      divisores[l] = 1;
     }
 
+    for (m = 0; m < provincias[i].diputados; m++) {
+      cocientes[0] = arrayVotos[i][0] / divisores[0];
+      cocientes[1] = arrayVotos[i][1] / divisores[1];
+      cocientes[2] = arrayVotos[i][2] / divisores[2];
+      cocientes[3] = arrayVotos[i][3] / divisores[3];
+      cocientes[4] = arrayVotos[i][4] / divisores[4];
+      cocientes[5] = arrayVotos[i][5] / divisores[5];
 
-    // Volvemos a dar los valores iniciales.
-    strcpy(arrayNombres[0], "PP");
-    strcpy(arrayNombres[1], "PSOE");
-    strcpy(arrayNombres[2], "IU");
-    strcpy(arrayNombres[3], "UPYD");
-    strcpy(arrayNombres[4], "Podemos");
-    strcpy(arrayNombres[5], "Ciudadanos");
+      for (n = 0; n < 6; n++) {
+        if (cocientes[n] > mayor) {
+          mayor = n;
+        }
+      }
+
+      printf("%ld\n",cocientes[0]);
+      provincias[i].diputadosArray[mayor] += 1;
+      divisores[mayor] += 1;
+      mayor = 0;
+    }
   }
 }
 
 void imprimirVotos() {
-  int i;
-  for (i = 0; i < 51; i++) {
-    puts(provincias[i].nombre);
-    int j;
-    for (j = 0; j < 6; j++) {
-      // Array votos desordenado
-      printf("%s: %d\n", arrayNombres[j], arrayVotos[i][j]);
-    }
-  }
+  // int i;
+  // for (i = 0; i < 51; i++) {
+  //   puts(provincias[i].nombre);
+  //   int j;
+  //   for (j = 0; j < 6; j++) {
+  //     // Array votos desordenado
+  //     printf("%s: %d\n", arrayNombres[j], arrayVotos[i][j]);
+  //   }
+  // }
 }
