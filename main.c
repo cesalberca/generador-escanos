@@ -30,7 +30,6 @@ long arrayVotos[50][6];
 void inicializacionDiputados();
 void importTxt();
 void rellenarVotosProvincias();
-void reordenarVotosMayorAMenor();
 void dhondt();
 void imprimirVotos();
 
@@ -143,7 +142,7 @@ int main(int argc, char *argv[]) {
   inicializacionDiputados();
   importTxt();
   rellenarVotosProvincias();
-  // reordenarVotosMayorAMenor();
+  dhondt();
   imprimirVotos();
 
 }
@@ -232,7 +231,7 @@ void rellenarVotosProvincias() {
   }
 }
 
-void reordenarVotosMayorAMenor() {
+void dhondt() {
   char arrayNombres[6][100];
   strcpy(arrayNombres[0], "PP");
   strcpy(arrayNombres[1], "PSOE");
@@ -241,8 +240,18 @@ void reordenarVotosMayorAMenor() {
   strcpy(arrayNombres[4], "Podemos");
   strcpy(arrayNombres[5], "Ciudadanos");
 
+  long tempArray[50][6];
   long temp1;
   char temp2[100];
+
+  int i;
+  for (i = 0; i < 51; i++) {
+    int j;
+    for (j = 0; j < 7; j++) {
+      tempArray[i][j] = arrayVotos[i][j];
+    }
+  }
+
 
   int i;
   for (i = 0; i < 51; i++) {
@@ -251,18 +260,32 @@ void reordenarVotosMayorAMenor() {
     for (j = 0; j < 6; j++) {
       int k;
       for (k = 1 + j; k < 6; k++) {
-        if (arrayVotos[i][j] < arrayVotos[i][k]) {
-          temp1 = arrayVotos[i][k];
+        if (tempArray[i][j] < tempArray[i][k]) {
+          temp1 = tempArray[i][k];
           strcpy(temp2, arrayNombres[k]);
 
-          arrayVotos[i][k] = arrayVotos[i][j];
+          tempArray[i][k] = tempArray[i][j];
           strcpy(arrayNombres[k], arrayNombres[j]);
 
-          arrayVotos[i][j] = temp1;
+          tempArray[i][j] = temp1;
           strcpy(arrayNombres[j], temp2);
         }
       }
     }
+
+    // Dhondt se encargará de hacer las operaciones pertinentes. Es importante tenerlo dentro de esta función ya que vamos a machacar constantemente los nombres de los partidos. Lo ejecutamos dentro del for ya que vamos a ir rellenando los diputados posición a posición.
+    int cocientes[6];
+    int l;
+    for (l = 0; l < provincias[i].diputados; l++) {
+      cocientes[0] = tempArray[i][0] / (l + 1);
+      cocientes[1] = tempArray[i][1] / (l + 1);
+      cocientes[2] = tempArray[i][2] / (l + 1);
+      cocientes[3] = tempArray[i][3] / (l + 1);
+      cocientes[4] = tempArray[i][4] / (l + 1);
+      cocientes[5] = tempArray[i][5] / (l + 1);
+    }
+
+
     // Volvemos a dar los valores iniciales.
     strcpy(arrayNombres[0], "PP");
     strcpy(arrayNombres[1], "PSOE");
@@ -270,41 +293,16 @@ void reordenarVotosMayorAMenor() {
     strcpy(arrayNombres[3], "UPYD");
     strcpy(arrayNombres[4], "Podemos");
     strcpy(arrayNombres[5], "Ciudadanos");
-    // Dhondt se encargará de hacer las operaciones pertinentes. Es importante tenerlo dentro de esta función ya que vamos a machacar constantemente los nombres de los partidos. Lo ejecutamos dentro del for ya que vamos a ir rellenando los diputados posición a posición.
-    dhondt();
-  }
-}
-
-void dhondt() {
-  int cocientes[6];
-  int i;
-  for (i = 0; i < 51; i++) {
-    int j;
-    for (j = 0; j < 6; j++) {
-      cocientes[0] = arrayVotos[i][0] / (j + 1);
-      cocientes[1] = arrayVotos[i][1] / (j + 1);
-      cocientes[2] = arrayVotos[i][2] / (j + 1);
-      cocientes[3] = arrayVotos[i][3] / (j + 1);
-      cocientes[4] = arrayVotos[i][4] / (j + 1);
-      cocientes[5] = arrayVotos[i][5] / (j + 1);
-    }
   }
 }
 
 void imprimirVotos() {
-  char arrayNombres[6][100];
-  strcpy(arrayNombres[0], "PP");
-  strcpy(arrayNombres[1], "PSOE");
-  strcpy(arrayNombres[2], "IU");
-  strcpy(arrayNombres[3], "UPYD");
-  strcpy(arrayNombres[4], "Podemos");
-  strcpy(arrayNombres[5], "Ciudadanos");
-
   int i;
-  for (i = 0; i < 2; i++) {
+  for (i = 0; i < 51; i++) {
     puts(provincias[i].nombre);
     int j;
     for (j = 0; j < 6; j++) {
+      // Array votos desordenado
       printf("%s: %d\n", arrayNombres[j], arrayVotos[i][j]);
     }
   }
