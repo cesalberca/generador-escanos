@@ -1,0 +1,33 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Sans-Serif;
+
+}
+
+div {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+table {
+  width: 100%;
+  margin: 20px 0;
+}
+
+th {
+  color: white;
+  background-color: green;
+  padding: 1.5rem;
+}
+
+td:first-child {
+  font-weight: bold;
+}
+
+td {
+  padding: 1rem;
+  width: 50%;
+}

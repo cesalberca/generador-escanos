@@ -2,8 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-FILE *txtFile;
-FILE *htmlFile;
+FILE *ficheroImportado;
+FILE *ficheroHtml;
+
+#define MAX_PROVINCIAS 51
+#define MAX_PARTIDOS 6
 
 struct Provincia {
   char nombre[100];
@@ -17,19 +20,20 @@ struct Provincia {
   int diputadosArray[6];
 };
 
-struct Provincia provincias[51];
+struct Provincia provincias[MAX_PROVINCIAS];
 // Ya que los votos son recogidos en forma de caracter, éstos han de ser pasados a long para poder operar con ellos. Los guardamos en un array de long.
-long arrayVotos[51][6];
-long tempArray[51][6];
-int arrayNombres[51][6];
+long arrayVotos[MAX_PROVINCIAS][MAX_PARTIDOS];
+long arrayTemp[MAX_PROVINCIAS][MAX_PARTIDOS];
+int arrayNombres[MAX_PROVINCIAS][MAX_PARTIDOS];
 
 
+void menu();
 void inicializacionDiputados();
-void importTxt();
-void rellenarVotosProvincias();
 void inicializarNombresArray();
+void importarFichero();
+void rellenarVotosProvincias();
 void dhondt();
-void imprimirVotos();
+void test();
 void generarHtml();
 
 struct Provincia madrid = {"Madrid", 36};
@@ -137,18 +141,50 @@ int main(int argc, char *argv[]) {
   provincias[49] = ceuta;
   provincias[50] = melilla;
 
+  int opcion;
 
-  inicializacionDiputados();
-  inicializarNombresArray();
-  importTxt();
-  rellenarVotosProvincias();
-  dhondt();
-  // imprimirVotos();
-  generarHtml();
+  do {
+    menu();
+    scanf("%i", &opcion);
 
+    while (opcion < 1 || opcion > 4) {
+      puts("Opcion incorrecta");
+      scanf("%i", &opcion);
+    }
+
+    switch (opcion) {
+      case 1:
+        inicializacionDiputados();
+        inicializarNombresArray();
+        importarFichero();
+        rellenarVotosProvincias();
+        dhondt();
+        break;
+      case 2:
+        generarHtml();
+        break;
+      case 3:
+        test();
+        break;
+      case 4:
+        puts("Gracias por usar nuestro programa");
+        break;
+    }
+  } while(opcion != 4);
+}
+
+void menu() {
+  puts("1. Importar archivo");
+  puts("2. Exportar archivo");
+  puts("3. Escribir en consola (Test)");
+  puts("4. Salir");
+}
+
+void test() {
+  // Test 1 Madrid
   printf("%s\n", provincias[0].nombre);
   int i;
-  for (i = 0; i < 6; i++) {
+  for (i = 0; i < MAX_PARTIDOS; i++) {
     switch (arrayNombres[0][i]) {
       case 1:
         printf("Diputados pp %i\n", provincias[0].diputadosArray[i]);
@@ -171,8 +207,9 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  printf("%s\n", provincias[6].nombre);
-  for (i = 0; i < 6; i++) {
+  // Test 2 Murcia
+  printf("%s\n", provincias[MAX_PARTIDOS].nombre);
+  for (i = 0; i < MAX_PARTIDOS; i++) {
     switch (arrayNombres[6][i]) {
       case 1:
         printf("Diputados pp %i\n", provincias[6].diputadosArray[i]);
@@ -198,76 +235,85 @@ int main(int argc, char *argv[]) {
 
 void inicializacionDiputados() {
   int i;
-  for (i = 0; i < 51; i++) {
+  for (i = 0; i < MAX_PROVINCIAS; i++) {
     int j;
-    for (j = 0; j < 6; j++) {
+    for (j = 0; j < MAX_PARTIDOS; j++) {
       // Inicializamos los diputados de cada partido a 0.
       provincias[i].diputadosArray[j] = 0;
     }
   }
 }
 
-void importTxt() {
-  char fileName[200];
+void inicializarNombresArray() {
+  int i;
+  for (i = 0; i < MAX_PROVINCIAS; i++) {
+    int j;
+    for (j = 0; j < MAX_PARTIDOS; j++) {
+      arrayNombres[i][j] = j + 1;
+    }
+  }
+}
 
-  char line1[100];
-  char line2[100];
-  char line3[100];
-  char line4[100];
-  char line5[100];
-  char line6[100];
-  char line7[100];
-  char line8[100];
-  char line9[100];
-  char line10[100];
-  char line11[100];
-  char line12[100];
-  char line13[100];
+void importarFichero() {
+  char nombre[200];
+  char linea1[100],
+       linea2[100],
+       linea3[100],
+       linea4[100],
+       linea5[100],
+       linea6[100],
+       linea7[100],
+       linea8[100],
+       linea9[100],
+       linea10[100],
+       linea11[100],
+       linea12[100],
+       linea13[100];
   int eofReturn = 0;
 
   puts("Introduce el nombre del archivo txt a importar:");
-  scanf("%s", fileName);
+  scanf("%s", nombre);
   // Concatenamos el nombre con .txt
-  strcat(fileName, ".txt");
+  strcat(nombre, ".txt");
 
-  txtFile = fopen(fileName, "r");
+  ficheroImportado = fopen(nombre, "r");
 
   do {
-    eofReturn = fscanf(txtFile, "%s", line1);
+    eofReturn = fscanf(ficheroImportado, "%s", linea1);
     // Leemos de 13 en 13 líneas hasta que se termine el archivo.
-    fscanf(txtFile, "%s", line2);
-    fscanf(txtFile, "%s", line3);
-    fscanf(txtFile, "%s", line4);
-    fscanf(txtFile, "%s", line5);
-    fscanf(txtFile, "%s", line6);
-    fscanf(txtFile, "%s", line7);
-    fscanf(txtFile, "%s", line8);
-    fscanf(txtFile, "%s", line9);
-    fscanf(txtFile, "%s", line10);
-    fscanf(txtFile, "%s", line11);
-    fscanf(txtFile, "%s", line12);
-    fscanf(txtFile, "%s", line13);
+    fscanf(ficheroImportado, "%s", linea2);
+    fscanf(ficheroImportado, "%s", linea3);
+    fscanf(ficheroImportado, "%s", linea4);
+    fscanf(ficheroImportado, "%s", linea5);
+    fscanf(ficheroImportado, "%s", linea6);
+    fscanf(ficheroImportado, "%s", linea7);
+    fscanf(ficheroImportado, "%s", linea8);
+    fscanf(ficheroImportado, "%s", linea9);
+    fscanf(ficheroImportado, "%s", linea10);
+    fscanf(ficheroImportado, "%s", linea11);
+    fscanf(ficheroImportado, "%s", linea12);
+    fscanf(ficheroImportado, "%s", linea13);
 
     int i;
-    for (i = 0; i < 51; i++) {
-      if (strcmp(line1, provincias[i].nombre) == 0) {
+    for (i = 0; i < MAX_PROVINCIAS; i++) {
+      if (strcmp(linea1, provincias[i].nombre) == 0) {
         // Rellenamos cada posición del array de estructuras con los datos importados.
-        strcpy(provincias[i].votosPP, line3);
-        strcpy(provincias[i].votosPsoe, line5);
-        strcpy(provincias[i].votosIu, line7);
-        strcpy(provincias[i].votosUpyd, line9);
-        strcpy(provincias[i].votosPodemos, line11);
-        strcpy(provincias[i].votosCiudadanos, line13);
+        strcpy(provincias[i].votosPP, linea3);
+        strcpy(provincias[i].votosPsoe, linea5);
+        strcpy(provincias[i].votosIu, linea7);
+        strcpy(provincias[i].votosUpyd, linea9);
+        strcpy(provincias[i].votosPodemos, linea11);
+        strcpy(provincias[i].votosCiudadanos, linea13);
       }
     }
   } while((eofReturn != EOF));
 
-  fclose(txtFile);
+  fclose(ficheroImportado);
 }
 
 void rellenarVotosProvincias() {
   int i;
-  for (i = 0; i < 51; i++) {
+  for (i = 0; i < MAX_PROVINCIAS; i++) {
     // Llenamos el array con los votos importados en la estructura.
     arrayVotos[i][0] = atol(provincias[i].votosPP);
     arrayVotos[i][1] = atol(provincias[i].votosPsoe);
@@ -276,24 +322,16 @@ void rellenarVotosProvincias() {
     arrayVotos[i][4] = atol(provincias[i].votosPodemos);
     arrayVotos[i][5] = atol(provincias[i].votosCiudadanos);
 
-    tempArray[i][0] = arrayVotos[i][0];
-    tempArray[i][1] = arrayVotos[i][1];
-    tempArray[i][2] = arrayVotos[i][2];
-    tempArray[i][3] = arrayVotos[i][3];
-    tempArray[i][4] = arrayVotos[i][4];
-    tempArray[i][5] = arrayVotos[i][5];
+    arrayTemp[i][0] = arrayVotos[i][0];
+    arrayTemp[i][1] = arrayVotos[i][1];
+    arrayTemp[i][2] = arrayVotos[i][2];
+    arrayTemp[i][3] = arrayVotos[i][3];
+    arrayTemp[i][4] = arrayVotos[i][4];
+    arrayTemp[i][5] = arrayVotos[i][5];
   }
 }
 
-void inicializarNombresArray() {
-  int i;
-  for (i = 0; i < 51; i++) {
-    int j;
-    for (j = 0; j < 6; j++) {
-      arrayNombres[i][j] = j + 1;
-    }
-  }
-}
+
 
 void dhondt() {
   long temp1;
@@ -305,28 +343,28 @@ void dhondt() {
   int l;
   int m;
   int n;
-  long cocientes[6];
-  long divisores[6];
+  long cocientes[MAX_PARTIDOS];
+  long divisores[MAX_PARTIDOS];
 
-  for (i = 0; i < 51; i++) {
+  for (i = 0; i < MAX_PROVINCIAS; i++) {
     // Recorremos todo el array de estructuras reordenando los votos junto con los nombres de los partidos.
-    // for (j = 0; j < 6; j++) {
-    //   for (k = 1 + j; k < 6; k++) {
-    //     if (tempArray[i][j] < tempArray[i][k]) {
-    //       temp1 = tempArray[i][k];
+    // for (j = 0; j < MAX_PARTIDOS; j++) {
+    //   for (k = 1 + j; k < MAX_PARTIDOS; k++) {
+    //     if (arrayTemp[i][j] < arrayTemp[i][k]) {
+    //       temp1 = arrayTemp[i][k];
     //       temp2 = arrayNombres[i][k];
     //
-    //       tempArray[i][k] = tempArray[i][j];
+    //       arrayTemp[i][k] = arrayTemp[i][j];
     //       arrayNombres[i][k] = arrayNombres[i][j];
     //
-    //       tempArray[i][j] = temp1;
+    //       arrayTemp[i][j] = temp1;
     //       arrayNombres[i][j] = temp2;
     //     }
     //   }
     // }
 
     // Dhondt se encargará de hacer las operaciones pertinentes. Es importante tenerlo dentro de esta función ya que vamos a machacar constantemente los nombres de los partidos. Lo ejecutamos dentro del for ya que vamos a ir rellenando los diputados posición a posición.
-    for (l = 0; l < 6; l++) {
+    for (l = 0; l < MAX_PARTIDOS; l++) {
       divisores[l] = 1;
     }
 
@@ -338,13 +376,12 @@ void dhondt() {
       cocientes[4] = arrayVotos[i][4] / divisores[4];
       cocientes[5] = arrayVotos[i][5] / divisores[5];
 
-      for (n = 0; n < 6; n++) {
+      for (n = 0; n < MAX_PARTIDOS; n++) {
         if (cocientes[n] > mayor) {
           mayor = n;
         }
       }
-
-      printf("%ld\n",cocientes[0]);
+      // printf("%ld\n",cocientes[0]);
       provincias[i].diputadosArray[mayor] += 1;
       divisores[mayor] += 1;
       mayor = 0;
@@ -352,93 +389,78 @@ void dhondt() {
   }
 }
 
-void imprimirVotos() {
-  // int i;
-  // for (i = 0; i < 51; i++) {
-  //   puts(provincias[i].nombre);
-  //   int j;
-  //   for (j = 0; j < 6; j++) {
-  //     // Array votos desordenado
-  //     printf("%s: %d\n", arrayNombres[j], arrayVotos[i][j]);
-  //   }
-  // }
-}
-
 void generarHtml() {
-  char name[100];
+  char nombre[100];
 
   printf("Introduce el nombre del archivo a exportar. No hace falta poner la extension\n");
-  scanf("%s", name);
-  strcat(name, ".html");
-  htmlFile = fopen(name, "w");
+  scanf("%s", nombre);
+  strcat(nombre, ".html");
+  ficheroHtml = fopen(nombre, "w");
 
-  fputs("<!doctype html>\n", htmlFile);
-  fputs("<html>\n", htmlFile);
-  fputs("\t<head>\n", htmlFile);
-  fputs("\t\t<meta charset='utf-8'>\n", htmlFile);
-  fputs("\t\t<meta http-equiv='x-ua-compatible' content='ie-edge'>\n", htmlFile);
-  fputs("\t\t<title></title>\n", htmlFile);
-  fputs("\t\t<meta name='description' content=''>\n", htmlFile);
-  fputs("\t\t<meta name='viewport' content='width=device-width, initial-scale=1'>\n\n", htmlFile);
-  fputs("\t\t<link rel='stylesheet' href='", htmlFile);
-  fputs("'/>\n", htmlFile);
-  fputs("\t</head>\n", htmlFile);
-  fputs("\t<body>\n", htmlFile);
+  fputs("<!doctype html>\n", ficheroHtml);
+  fputs("<html>\n", ficheroHtml);
+  fputs("\t<head>\n", ficheroHtml);
+  fputs("\t\t<meta charset='utf-8'>\n", ficheroHtml);
+  fputs("\t\t<meta http-equiv='x-ua-compatible' content='ie-edge'>\n", ficheroHtml);
+  fputs("\t\t<title>Práctica Programación | Adrían de la Gala y César Alberca</title>\n", ficheroHtml);
+  fputs("\t\t<meta name='description' content='Tablas con diputados por partido y por comunidad según la ley de Dhont.'>\n", ficheroHtml);
+  fputs("\t\t<meta name='viewport' content='width=device-width, initial-scale=1'>\n\n", ficheroHtml);
+  fputs("\t\t<link rel='stylesheet' href='styles.css", ficheroHtml);
+  fputs("'/>\n", ficheroHtml);
+  fputs("\t</head>\n", ficheroHtml);
+  fputs("\t<body>\n", ficheroHtml);
+  fputs("\t\t<div>\n", ficheroHtml);
 
   int i;
-  for (i = 0; i < 51; i++) {
-    fputs("\t\t\t<table rules='all' border='1'>\n", htmlFile);
-
-    fputs("\t\t\t\t<tr>\n", htmlFile);
-
-    fputs("\t\t\t\t\t<td colspan='2' align='center'>", htmlFile);
-    fprintf(htmlFile, "%s", provincias[i].nombre);
-    fputs("</td>\n", htmlFile);
-
-    fputs("\t\t\t\t</tr>\n", htmlFile);
+  for (i = 0; i < MAX_PROVINCIAS; i++) {
+    fputs("\t\t\t\t<table rules='all' border='1'>\n", ficheroHtml);
+    fputs("\t\t\t\t\t<tr>\n", ficheroHtml);
+    fputs("\t\t\t\t\t\t<th colspan='2' align='center'>", ficheroHtml);
+    // Nombre de cada provincia
+    fprintf(ficheroHtml, "%s", provincias[i].nombre);
+    fputs("</th>\n", ficheroHtml);
+    fputs("\t\t\t\t\t</tr>\n", ficheroHtml);
 
     int j;
-    for (j = 0; j < 6; j++) {
+    for (j = 0; j < MAX_PARTIDOS; j++) {
       if (provincias[i].diputadosArray[j] != 0) {
-        fputs("\t\t\t\t<tr>\n", htmlFile);
-
-        fputs("\t\t\t\t\t<td>", htmlFile);
+        fputs("\t\t\t\t\t<tr>\n", ficheroHtml);
+        fputs("\t\t\t\t\t\t<td>", ficheroHtml);
+        // Nombre del partido
         switch (arrayNombres[i][j]) {
           case 1:
-            fputs("Diputados pp", htmlFile);
+            fputs("PP", ficheroHtml);
           break;
           case 2:
-            fputs("Diputados psoe", htmlFile);
+            fputs("PSOE", ficheroHtml);
           break;
           case 3:
-            fputs("Diputados iu", htmlFile);
+            fputs("IU", ficheroHtml);
           break;
           case 4:
-            fputs("Diputados upyd", htmlFile);
+            fputs("UPYD", ficheroHtml);
           break;
           case 5:
-            fputs("Diputados podemos", htmlFile);
+            fputs("Podemos", ficheroHtml);
           break;
           case 6:
-            fputs("Diputados Ciudadanos", htmlFile);
+            fputs("Ciudadanos", ficheroHtml);
           break;
         }
-        fputs("</td>\n", htmlFile);
+        fputs("</td>\n", ficheroHtml);
 
-        fputs("\t\t\t\t\t<td>", htmlFile);
-        fprintf(htmlFile, "%i", provincias[i].diputadosArray[j]);
-        fputs("</td>\n", htmlFile);
-
-        fputs("\t\t\t\t</tr>\n", htmlFile);
+        fputs("\t\t\t\t\t\t<td>", ficheroHtml);
+        // Número de diputados
+        fprintf(ficheroHtml, "%i", provincias[i].diputadosArray[j]);
+        fputs("</td>\n", ficheroHtml);
+        fputs("\t\t\t\t\t</tr>\n", ficheroHtml);
       }
     }
-
-
-    fputs("\t\t\t</table>\n", htmlFile);
+    fputs("\t\t\t\t</table>\n", ficheroHtml);
   }
+  fputs("\t\t</div>\n", ficheroHtml);
+  fputs("\t</body>\n", ficheroHtml);
+  fputs("</html>\n", ficheroHtml);
 
-  fputs("\t</body>\n", htmlFile);
-  fputs("</html>\n", htmlFile);
-
-  fclose(htmlFile);
+  fclose(ficheroHtml);
 }
