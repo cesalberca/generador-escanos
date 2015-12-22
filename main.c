@@ -3,6 +3,7 @@
 #include <string.h>
 
 FILE *txtFile;
+FILE *htmlFile;
 
 struct Provincia {
   char nombre[100];
@@ -29,6 +30,7 @@ void rellenarVotosProvincias();
 void inicializarNombresArray();
 void dhondt();
 void imprimirVotos();
+void generarHtml();
 
 struct Provincia madrid = {"Madrid", 36};
 struct Provincia barcelona = {"Barcelona", 36};
@@ -142,6 +144,7 @@ int main(int argc, char *argv[]) {
   rellenarVotosProvincias();
   dhondt();
   // imprimirVotos();
+  generarHtml();
 
   printf("%s\n", provincias[0].nombre);
   int i;
@@ -359,4 +362,83 @@ void imprimirVotos() {
   //     printf("%s: %d\n", arrayNombres[j], arrayVotos[i][j]);
   //   }
   // }
+}
+
+void generarHtml() {
+  char name[100];
+
+  printf("Introduce el nombre del archivo a exportar. No hace falta poner la extension\n");
+  scanf("%s", name);
+  strcat(name, ".html");
+  htmlFile = fopen(name, "w");
+
+  fputs("<!doctype html>\n", htmlFile);
+  fputs("<html>\n", htmlFile);
+  fputs("\t<head>\n", htmlFile);
+  fputs("\t\t<meta charset='utf-8'>\n", htmlFile);
+  fputs("\t\t<meta http-equiv='x-ua-compatible' content='ie-edge'>\n", htmlFile);
+  fputs("\t\t<title></title>\n", htmlFile);
+  fputs("\t\t<meta name='description' content=''>\n", htmlFile);
+  fputs("\t\t<meta name='viewport' content='width=device-width, initial-scale=1'>\n\n", htmlFile);
+  fputs("\t\t<link rel='stylesheet' href='", htmlFile);
+  fputs("'/>\n", htmlFile);
+  fputs("\t</head>\n", htmlFile);
+  fputs("\t<body>\n", htmlFile);
+
+  int i;
+  for (i = 0; i < 51; i++) {
+    fputs("\t\t\t<table rules='all' border='1'>\n", htmlFile);
+
+    fputs("\t\t\t\t<tr>\n", htmlFile);
+
+    fputs("\t\t\t\t\t<td colspan='2' align='center'>", htmlFile);
+    fprintf(htmlFile, "%s", provincias[i].nombre);
+    fputs("</td>\n", htmlFile);
+
+    fputs("\t\t\t\t</tr>\n", htmlFile);
+
+    int j;
+    for (j = 0; j < 6; j++) {
+      if (provincias[i].diputadosArray[j] != 0) {
+        fputs("\t\t\t\t<tr>\n", htmlFile);
+
+        fputs("\t\t\t\t\t<td>", htmlFile);
+        switch (arrayNombres[i][j]) {
+          case 1:
+            fputs("Diputados pp", htmlFile);
+          break;
+          case 2:
+            fputs("Diputados psoe", htmlFile);
+          break;
+          case 3:
+            fputs("Diputados iu", htmlFile);
+          break;
+          case 4:
+            fputs("Diputados upyd", htmlFile);
+          break;
+          case 5:
+            fputs("Diputados podemos", htmlFile);
+          break;
+          case 6:
+            fputs("Diputados Ciudadanos", htmlFile);
+          break;
+        }
+        fputs("</td>\n", htmlFile);
+
+        fputs("\t\t\t\t\t<td>", htmlFile);
+        fprintf(htmlFile, "%i", provincias[i].diputadosArray[j]);
+        fputs("</td>\n", htmlFile);
+
+        fputs("\t\t\t\t</tr>\n", htmlFile);
+      }
+    }
+
+
+    fputs("\t\t\t</table>\n", htmlFile);
+  }
+
+  fputs("\t</body>\n", htmlFile);
+  fputs("</html>\n", htmlFile);
+
+  fclose(htmlFile);
 }
