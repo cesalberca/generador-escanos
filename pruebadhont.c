@@ -1,7 +1,12 @@
 long tabla [50] [50]; //Este array contendrá la tabla que tiene los datos de los votos ya divididos, para luego hacer el recuento de escaños
 int escanos [6];
+/*Escaños en el array
+posicion 0 = PP
+posicion  1 = PSOE
+etc...*/
 	for (m = 0; m < 6; m++){
 		escanos [m] = 0;
+		
 	}
   for (i = 0; i < provincias[i].diputados; i++) {//empezamos haciendo las divisiones
 	  
@@ -29,7 +34,7 @@ int escanos [6];
       divisores[mayor] += 1;
       mayor = 0;*/
     }
-	for (i = 0; i < provincias[i].diputados; i++) {//este bucle observará cuales son los números mayores
+	for (i = 0; i < provincias[i].diputados; i++) {//este bucle observará cuales son los números mayores y añadirá un escaño a ese partido
 		for (k = 0; k < 6; k++){
 			if (tabla[i] [k] > mayor) {
 				mayor = tabla [i][k] ;
@@ -45,4 +50,7 @@ int escanos [6];
 		}
 		}
     }
+	/*Faltan los printf y en teoría, si me he explicado bien y lo he pensado bien, esto funciona,
+	me gustaría que me comentases antes de terminarlo, a ver cómo lo ves, si te gusta la forma
+	en la que está hecho, no se me ocurría una mejor, la verdad, de todos modos, si crees que algo está mal dime*/
 	 
