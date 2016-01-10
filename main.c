@@ -345,48 +345,62 @@ void dhondt() {
   int n;
   long cocientes[MAX_PARTIDOS];
   long divisores[MAX_PARTIDOS];
+  long tabla [50] [6]; //Este array contendrá la tabla que tiene los datos de los votos ya divididos, para luego hacer el recuento de escaños
+  int escanos [6];
+	/*Escaños en el array
+	posicion 0 = PP
+	posicion  1 = PSOE
+	etc...*/
+	for (m = 0; m < 6; m++){
+		escanos [m] = 0;
+		
+	}
+  for (i = 0; i < provincias[i].diputados; i++) {//empezamos haciendo las divisiones
+	  
+      tabla [i] [0] = arrayVotos[i][0] / i + 1;
+      tabla [i] [1] = arrayVotos[i][1] / i + 1;
+      tabla [i] [2] = arrayVotos[i][2] / i + 1;
+      tabla [i] [3] = arrayVotos[i][3] / i + 1;
+      tabla [i] [4] = arrayVotos[i][4] / i + 1;
+      tabla [i] [5] = arrayVotos[i][5] / i + 1;
+	  
 
-  for (i = 0; i < MAX_PROVINCIAS; i++) {
-    // Recorremos todo el array de estructuras reordenando los votos junto con los nombres de los partidos.
-    // for (j = 0; j < MAX_PARTIDOS; j++) {
-    //   for (k = 1 + j; k < MAX_PARTIDOS; k++) {
-    //     if (arrayTemp[i][j] < arrayTemp[i][k]) {
-    //       temp1 = arrayTemp[i][k];
-    //       temp2 = arrayNombres[i][k];
-    //
-    //       arrayTemp[i][k] = arrayTemp[i][j];
-    //       arrayNombres[i][k] = arrayNombres[i][j];
-    //
-    //       arrayTemp[i][j] = temp1;
-    //       arrayNombres[i][j] = temp2;
-    //     }
-    //   }
-    // }
 
-    // Dhondt se encargará de hacer las operaciones pertinentes. Es importante tenerlo dentro de esta función ya que vamos a machacar constantemente los nombres de los partidos. Lo ejecutamos dentro del for ya que vamos a ir rellenando los diputados posición a posición.
-    for (l = 0; l < MAX_PARTIDOS; l++) {
-      divisores[l] = 1;
-    }
-
-    for (m = 0; m < provincias[i].diputados; m++) {
-      cocientes[0] = arrayVotos[i][0] / divisores[0];
-      cocientes[1] = arrayVotos[i][1] / divisores[1];
-      cocientes[2] = arrayVotos[i][2] / divisores[2];
-      cocientes[3] = arrayVotos[i][3] / divisores[3];
-      cocientes[4] = arrayVotos[i][4] / divisores[4];
-      cocientes[5] = arrayVotos[i][5] / divisores[5];
-
-      for (n = 0; n < MAX_PARTIDOS; n++) {
-        if (cocientes[n] > mayor) {
-          mayor = n;
-        }
+      /*for (n = 0; n < MAX_PARTIDOS; n++) {
+		  mayor = 0;
+		  for (k = 0; k < 6; k++){
+			if (tabla[n] [k] > mayor) {
+				mayor = tabla [n][k] ;
+			}
+		}
       }
+	  
+	  for(m = 0; m<)
       // printf("%ld\n",cocientes[0]);
       provincias[i].diputadosArray[mayor] += 1;
       divisores[mayor] += 1;
-      mayor = 0;
+      mayor = 0;*/
     }
-  }
+	for (i = 0; i < provincias[i].diputados; i++) {//este bucle observará cuales son los números mayores y añadirá un escaño a ese partido
+		for (k = 0; k < 6; k++){
+			if (tabla[i] [k] > mayor) {
+				mayor = tabla [i][k] ;
+			}
+		for (i = 0; i < provincias[i].diputados; i++) {
+			for (k = 0; k < 6; k++){
+				if (tabla[i] [k] == mayor) {
+				tabla [i][k] = 0;
+				escanos [k] = escanos [k] + 1;
+				}
+			
+			}
+		}
+		}
+    }
+	/*Faltan los printf y en teoría, si me he explicado bien y lo he pensado bien, esto funciona,
+	me gustaría que me comentases antes de terminarlo, a ver cómo lo ves, si te gusta la forma
+	en la que está hecho, no se me ocurría una mejor, la verdad, de todos modos, si crees que algo está mal dime*/
+	 
 }
 
 void generarHtml() {
