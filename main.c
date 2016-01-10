@@ -23,8 +23,6 @@ struct Provincia {
 struct Provincia provincias[MAX_PROVINCIAS];
 // Ya que los votos son recogidos en forma de caracter, éstos han de ser pasados a long para poder operar con ellos. Los guardamos en un array de long.
 long arrayVotos[MAX_PROVINCIAS][MAX_PARTIDOS];
-long arrayTemp[MAX_PROVINCIAS][MAX_PARTIDOS];
-int arrayNombres[MAX_PROVINCIAS][MAX_PARTIDOS];
 
 
 void mostrarMenu();
@@ -332,17 +330,14 @@ void rellenarVotosProvincias() {
 }
 
 void dhondt() {
-  long temp1;
-  int temp2;
-  int mayor;
+  int mayor = 0;
   int i;
   int j;
   int k;
   int l;
   int m;
   int n;
-  long cocientes[MAX_PARTIDOS];
-  long divisores[MAX_PARTIDOS];
+
   //Este array contendrá la tabla que tiene los datos de los votos ya divididos, para luego hacer el recuento de escaños
   long tabla[50][6];
   int escanos[6];
@@ -350,39 +345,52 @@ void dhondt() {
 	posicion 0 = PP
 	posicion  1 = PSOE
 	etc...*/
-	for (m = 0; m < 6; m++){
-		escanos[m] = 0;
-	}
+  /*
+    Madrid
+    1. PP = 20
+    2. PSOE = 10
+  */
 
-  for (i = 0; i < provincias[i].diputados; i++) {//empezamos haciendo las divisiones
+  for (i = 0; i < MAX_PROVINCIAS; i++) {//empezamos haciendo las divisiones
     tabla[i][0] = arrayVotos[i][0] / (i + 1);
     tabla[i][1] = arrayVotos[i][1] / (i + 1);
     tabla[i][2] = arrayVotos[i][2] / (i + 1);
     tabla[i][3] = arrayVotos[i][3] / (i + 1);
     tabla[i][4] = arrayVotos[i][4] / (i + 1);
     tabla[i][5] = arrayVotos[i][5] / (i + 1);
-  }
 
-  // Este bucle observará cuales son los números mayores y añadirá un escaño a ese partido
-	for (i = 0; i < provincias[i].diputados; i++) {
-		for (j = 0; j < 6; j++){
-			if (tabla[i][j] > mayor) {
-				mayor = tabla[i][j] ;
-			}
-  		for (k = 0; k < provincias[i].diputados; k++) {
-  			for (l = 0; l < 6; l++){
-  				if (tabla[k][l] == mayor) {
-    				tabla[k][l] = 0;
-    				escanos[l] = escanos[l] + 1;
-  				}
+
+    // Este bucle observará cuales son los números mayores y añadirá un escaño a ese partido
+    // 36
+    // Recorremos los escanos disponibles por provincia
+  	for (i = 0; i < provincias[i].diputados; i++) {
+      // Inicializamos a 0 los escanos una vez hemos terminado con la provincia.
+      for (m = 0; m < 6; m++){
+    		escanos[m] = 0;
+    	}
+      // Recorremos los partidos y vamos asignando escanos.
+  		for (j = 0; j < 6; j++) {
+        // Busca el mayor
+  			if (tabla[i][j] > mayor) {
+  				mayor = tabla[i][j];
   			}
+        // Asigna el escano.
+    		for (k = 0; k < provincias[i].diputados; k++) {
+          // Recorremos los partidos.
+    			for (l = 0; l < 6; l++) {
+    				if (tabla[k][l] == mayor) {
+      				tabla[k][l] = 0;
+      				escanos[l] = escanos[l] + 1;
+              printf("%i\n", escanos[l]);
+    				}
+    			}
+    		}
   		}
-		}
+    }
+  	/*Faltan los printf y en teoría, si me he explicado bien y lo he pensado bien, esto funciona,
+  	me gustaría que me comentases antes de terminarlo, a ver cómo lo ves, si te gusta la forma
+  	en la que está hecho, no se me ocurría una mejor, la verdad, de todos modos, si crees que algo está mal dime*/
   }
-	/*Faltan los printf y en teoría, si me he explicado bien y lo he pensado bien, esto funciona,
-	me gustaría que me comentases antes de terminarlo, a ver cómo lo ves, si te gusta la forma
-	en la que está hecho, no se me ocurría una mejor, la verdad, de todos modos, si crees que algo está mal dime*/
-
 }
 
 void generarHtml() {
