@@ -2,10 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "pointeraser.h"
+
 FILE *ficheroImportado;
 FILE *ficheroHtml;
 
 #define MAX_PROVINCIAS 51
+// Numero de partidos politicos en estas elecciones.
 #define MAX_PARTIDOS 6
 
 struct Provincia {
@@ -20,22 +23,20 @@ struct Provincia {
   int diputadosArray[6];
 };
 
+// Generamos un array de la estructura Provincia.
 struct Provincia provincias[MAX_PROVINCIAS];
-// Ya que los votos son recogidos en forma de caracter, éstos han de ser pasados a long para poder operar con ellos. Los guardamos en un array de long.
-long arrayVotos[MAX_PROVINCIAS][MAX_PARTIDOS];
-
+// Ya que los votos son recogidos en forma de caracter, éstos han de ser pasados a int para poder operar con ellos. Los guardamos en un array de int.
+int arrayVotos[MAX_PROVINCIAS][MAX_PARTIDOS];
 
 void mostrarMenu();
 void inicializacionDiputados();
-void inicializarNombresArray();
 void importarFichero();
 void rellenarVotosProvincias();
 void dhondt();
-void test();
 void generarHtml();
 
 struct Provincia madrid = {"Madrid", 36};
-struct Provincia barcelona = {"Barcelona", 36};
+struct Provincia barcelona = {"Barcelona", 34};
 struct Provincia valencia = {"Valencia", 16};
 struct Provincia alicante = {"Alicante", 12};
 struct Provincia sevilla = {"Sevilla", 12};
@@ -145,15 +146,15 @@ int main(int argc, char *argv[]) {
     mostrarMenu();
     scanf("%i", &opcion);
 
-    while (opcion < 1 || opcion > 4) {
-      puts("Opcion incorrecta");
+    // Bloqueamos al usuario de entrar un numero fuera de rango.
+    while (opcion < 1 || opcion > 3) {
+      puts("Opcion incorrecta. Introduce otra opcion:");
       scanf("%i", &opcion);
     }
 
     switch (opcion) {
       case 1:
         inicializacionDiputados();
-        inicializarNombresArray();
         importarFichero();
         rellenarVotosProvincias();
         dhondt();
@@ -162,73 +163,16 @@ int main(int argc, char *argv[]) {
         generarHtml();
         break;
       case 3:
-        test();
-        break;
-      case 4:
-        puts("Gracias por usar nuestro programa");
+        puts("Gracias por usar nuestro programa.");
         break;
     }
-  } while(opcion != 4);
+  } while(opcion != 3);
 }
 
 void mostrarMenu() {
   puts("1. Importar archivo");
   puts("2. Exportar archivo");
-  puts("3. Escribir en consola (Test)");
-  puts("4. Salir");
-}
-
-void test() {
-  // Test 1 Madrid
-  printf("%s\n", provincias[0].nombre);
-  int i;
-  for (i = 0; i < MAX_PARTIDOS; i++) {
-    switch (arrayNombres[0][i]) {
-      case 1:
-        printf("Diputados pp %i\n", provincias[0].diputadosArray[i]);
-      break;
-      case 2:
-        printf("Diputados psoe %i\n", provincias[0].diputadosArray[i]);
-      break;
-      case 3:
-        printf("Diputados iu %i\n", provincias[0].diputadosArray[i]);
-      break;
-      case 4:
-        printf("Diputados upyd %i\n", provincias[0].diputadosArray[i]);
-      break;
-      case 5:
-        printf("Diputados podemos %i\n", provincias[0].diputadosArray[i]);
-      break;
-      case 6:
-        printf("Diputados Ciudadanos %i\n", provincias[0].diputadosArray[i]);
-      break;
-    }
-  }
-
-  // Test 2 Murcia
-  printf("%s\n", provincias[MAX_PARTIDOS].nombre);
-  for (i = 0; i < MAX_PARTIDOS; i++) {
-    switch (arrayNombres[6][i]) {
-      case 1:
-        printf("Diputados pp %i\n", provincias[6].diputadosArray[i]);
-      break;
-      case 2:
-        printf("Diputados psoe %i\n", provincias[6].diputadosArray[i]);
-      break;
-      case 3:
-        printf("Diputados iu %i\n", provincias[6].diputadosArray[i]);
-      break;
-      case 4:
-        printf("Diputados upyd %i\n", provincias[6].diputadosArray[i]);
-      break;
-      case 5:
-        printf("Diputados podemos %i\n", provincias[6].diputadosArray[i]);
-      break;
-      case 6:
-        printf("Diputados Ciudadanos %i\n", provincias[45].diputadosArray[i]);
-      break;
-    }
-  }
+  puts("3. Salir");
 }
 
 void inicializacionDiputados() {
@@ -238,16 +182,6 @@ void inicializacionDiputados() {
     for (j = 0; j < MAX_PARTIDOS; j++) {
       // Inicializamos los diputados de cada partido a 0.
       provincias[i].diputadosArray[j] = 0;
-    }
-  }
-}
-
-void inicializarNombresArray() {
-  int i;
-  for (i = 0; i < MAX_PROVINCIAS; i++) {
-    int j;
-    for (j = 0; j < MAX_PARTIDOS; j++) {
-      arrayNombres[i][j] = j + 1;
     }
   }
 }
@@ -269,7 +203,7 @@ void importarFichero() {
        linea13[100];
   int eofReturn = 0;
 
-  puts("Introduce el nombre del archivo txt a importar:");
+  puts("Introduce el nombre del archivo txt a importar. No hace falta que pongas la extension:");
   scanf("%s", nombre);
   // Concatenamos el nombre con .txt
   strcat(nombre, ".txt");
@@ -319,77 +253,67 @@ void rellenarVotosProvincias() {
     arrayVotos[i][3] = atol(provincias[i].votosUpyd);
     arrayVotos[i][4] = atol(provincias[i].votosPodemos);
     arrayVotos[i][5] = atol(provincias[i].votosCiudadanos);
-
-    arrayTemp[i][0] = arrayVotos[i][0];
-    arrayTemp[i][1] = arrayVotos[i][1];
-    arrayTemp[i][2] = arrayVotos[i][2];
-    arrayTemp[i][3] = arrayVotos[i][3];
-    arrayTemp[i][4] = arrayVotos[i][4];
-    arrayTemp[i][5] = arrayVotos[i][5];
   }
 }
 
 void dhondt() {
-  int mayor = 0;
   int i;
   int j;
   int k;
   int l;
   int m;
-  int n;
 
-  //Este array contendrá la tabla que tiene los datos de los votos ya divididos, para luego hacer el recuento de escaños
-  long tabla[50][6];
-  int escanos[6];
-	/*Escaños en el array
-	posicion 0 = PP
-	posicion  1 = PSOE
-	etc...*/
-  /*
-    Madrid
-    1. PP = 20
-    2. PSOE = 10
-  */
-
-  for (i = 0; i < MAX_PROVINCIAS; i++) {//empezamos haciendo las divisiones
-    tabla[i][0] = arrayVotos[i][0] / (i + 1);
-    tabla[i][1] = arrayVotos[i][1] / (i + 1);
-    tabla[i][2] = arrayVotos[i][2] / (i + 1);
-    tabla[i][3] = arrayVotos[i][3] / (i + 1);
-    tabla[i][4] = arrayVotos[i][4] / (i + 1);
-    tabla[i][5] = arrayVotos[i][5] / (i + 1);
-
-
-    // Este bucle observará cuales son los números mayores y añadirá un escaño a ese partido
-    // 36
-    // Recorremos los escanos disponibles por provincia
-  	for (i = 0; i < provincias[i].diputados; i++) {
-      // Inicializamos a 0 los escanos una vez hemos terminado con la provincia.
-      for (m = 0; m < 6; m++){
-    		escanos[m] = 0;
-    	}
-      // Recorremos los partidos y vamos asignando escanos.
-  		for (j = 0; j < 6; j++) {
-        // Busca el mayor
-  			if (tabla[i][j] > mayor) {
-  				mayor = tabla[i][j];
-  			}
-        // Asigna el escano.
-    		for (k = 0; k < provincias[i].diputados; k++) {
-          // Recorremos los partidos.
-    			for (l = 0; l < 6; l++) {
-    				if (tabla[k][l] == mayor) {
-      				tabla[k][l] = 0;
-      				escanos[l] = escanos[l] + 1;
-              printf("%i\n", escanos[l]);
-    				}
-    			}
-    		}
-  		}
+  int mayor = 0;
+  // Recorremos el array de estructuras provincias
+  for (i = 0; i < MAX_PROVINCIAS; i++) {
+    float divisionesVotos[provincias[i].diputados][MAX_PARTIDOS];
+    // Este bucle for realiza las divisiones y coloca los numeros en una tabla.
+    for (j = 0; j < provincias[i].diputados; j++) {
+          divisionesVotos[j][0] = arrayVotos[i][0] / (j + 1);
+          divisionesVotos[j][1] = arrayVotos[i][1] / (j + 1);
+          divisionesVotos[j][2] = arrayVotos[i][2] / (j + 1);
+          divisionesVotos[j][3] = arrayVotos[i][3] / (j + 1);
+          divisionesVotos[j][4] = arrayVotos[i][4] / (j + 1);
+          divisionesVotos[j][5] = arrayVotos[i][5] / (j + 1);
     }
-  	/*Faltan los printf y en teoría, si me he explicado bien y lo he pensado bien, esto funciona,
-  	me gustaría que me comentases antes de terminarlo, a ver cómo lo ves, si te gusta la forma
-  	en la que está hecho, no se me ocurría una mejor, la verdad, de todos modos, si crees que algo está mal dime*/
+    // Recorremso la tabla en busca del numero del resultado de la division de los votos mas alta.
+    for (k = 0; k < provincias[i].diputados; k++) {
+      mayor = 0;
+      for (l = 0; l < MAX_PARTIDOS; l++) {
+        if (divisionesVotos[0][l] > divisionesVotos[0][mayor]) {
+          mayor = l;
+        }
+      }
+
+      // En caso de encontrar el mayor, corremos la fila entera del array, eliminando la primera posicion para las subsecuentes operaciones del algoritmo.
+      for (m = 0; m < provincias[i].diputados; m++) {
+        divisionesVotos[m][mayor] = divisionesVotos[m + 1][mayor];
+      }
+
+      // Este switch asignara los escanios de cada partido.
+      if (arrayVotos[i][mayor] != 0) {
+        switch (mayor) {
+          case 0:
+          provincias[i].diputadosArray[0] += 1;
+          break;
+          case 1:
+          provincias[i].diputadosArray[1] += 1;
+          break;
+          case 2:
+          provincias[i].diputadosArray[2] += 1;
+          break;
+          case 3:
+          provincias[i].diputadosArray[3] += 1;
+          break;
+          case 4:
+          provincias[i].diputadosArray[4] += 1;
+          break;
+          case 5:
+          provincias[i].diputadosArray[5] += 1;
+          break;
+        }
+      }
+    }
   }
 }
 
@@ -426,40 +350,63 @@ void generarHtml() {
     fputs("\t\t\t\t\t</tr>\n", ficheroHtml);
 
     int j;
-    for (j = 0; j < MAX_PARTIDOS; j++) {
-      if (provincias[i].diputadosArray[j] != 0) {
-        fputs("\t\t\t\t\t<tr>\n", ficheroHtml);
-        fputs("\t\t\t\t\t\t<td>", ficheroHtml);
-        // Nombre del partido
-        switch (arrayNombres[i][j]) {
-          case 1:
-            fputs("PP", ficheroHtml);
+    for (j = 0; j < MAX_PROVINCIAS; j++) {
+      fputs("\t\t\t\t\t<tr>\n", ficheroHtml);
+      switch (j) {
+        case 0:
+          fputs("\t\t\t\t\t\t<td>", ficheroHtml);
+          fputs("PP", ficheroHtml);
+          fputs("</td>", ficheroHtml);
+          fputs("\t\t\t\t\t\t<td>", ficheroHtml);
+          fprintf(ficheroHtml, "%i\n", provincias[i].diputadosArray[0]);
+          fputs("</td>", ficheroHtml);
           break;
-          case 2:
-            fputs("PSOE", ficheroHtml);
+        case 1:
+          fputs("\t\t\t\t\t\t<td>", ficheroHtml);
+          fputs("PSOE", ficheroHtml);
+          fputs("</td>", ficheroHtml);
+          fputs("\t\t\t\t\t\t<td>", ficheroHtml);
+          fprintf(ficheroHtml, "%i\n", provincias[i].diputadosArray[1]);
+          fputs("</td>", ficheroHtml);
           break;
-          case 3:
-            fputs("IU", ficheroHtml);
+        case 2:
+          fputs("\t\t\t\t\t\t<td>", ficheroHtml);
+          fputs("IU", ficheroHtml);
+          fputs("</td>", ficheroHtml);
+          fputs("\t\t\t\t\t\t<td>", ficheroHtml);
+          fprintf(ficheroHtml, "%i\n", provincias[i].diputadosArray[2]);
+          fputs("</td>", ficheroHtml);
           break;
-          case 4:
-            fputs("UPYD", ficheroHtml);
+        case 3:
+          fputs("\t\t\t\t\t\t<td>", ficheroHtml);
+          fputs("UPYD", ficheroHtml);
+          fputs("</td>", ficheroHtml);
+          fputs("\t\t\t\t\t\t<td>", ficheroHtml);
+          fprintf(ficheroHtml, "%i\n", provincias[i].diputadosArray[3]);
+          fputs("</td>", ficheroHtml);
           break;
-          case 5:
-            fputs("Podemos", ficheroHtml);
+        case 4:
+          fputs("\t\t\t\t\t\t<td>", ficheroHtml);
+          fputs("Podemos", ficheroHtml);
+          fputs("</td>", ficheroHtml);
+          fputs("\t\t\t\t\t\t<td>", ficheroHtml);
+          fprintf(ficheroHtml, "%i\n", provincias[i].diputadosArray[4]);
+          fputs("</td>", ficheroHtml);
           break;
-          case 6:
-            fputs("Ciudadanos", ficheroHtml);
+        case 5:
+          fputs("\t\t\t\t\t\t<td>", ficheroHtml);
+          fputs("Ciudadanos", ficheroHtml);
+          fputs("</td>", ficheroHtml);
+          fputs("\t\t\t\t\t\t<td>", ficheroHtml);
+          fprintf(ficheroHtml, "%i\n", provincias[i].diputadosArray[5]);
+          fputs("</td>", ficheroHtml);
           break;
-        }
-        fputs("</td>\n", ficheroHtml);
-
-        fputs("\t\t\t\t\t\t<td>", ficheroHtml);
-        // Número de diputados
-        fprintf(ficheroHtml, "%i", provincias[i].diputadosArray[j]);
-        fputs("</td>\n", ficheroHtml);
-        fputs("\t\t\t\t\t</tr>\n", ficheroHtml);
       }
+      fputs("</tr>\n", ficheroHtml);
     }
+
+    fputs("</td>\n", ficheroHtml);
+    fputs("\t\t\t\t\t</tr>\n", ficheroHtml);
     fputs("\t\t\t\t</table>\n", ficheroHtml);
   }
   fputs("\t\t</div>\n", ficheroHtml);
