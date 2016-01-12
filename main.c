@@ -26,7 +26,7 @@ struct Provincia {
 // Generamos un array de la estructura Provincia.
 struct Provincia provincias[MAX_PROVINCIAS];
 // Ya que los votos son recogidos en forma de caracter, éstos han de ser pasados a int para poder operar con ellos. Los guardamos en un array de int.
-long arrayVotos[MAX_PROVINCIAS][MAX_PARTIDOS];
+int arrayVotos[MAX_PROVINCIAS][MAX_PARTIDOS];
 
 void mostrarMenu();
 void inicializacionDiputados();
@@ -251,13 +251,13 @@ void rellenarVotosProvincias() {
   int i;
   for (i = 0; i < MAX_PROVINCIAS; i++) {
     // Llenamos el array con los votos importados en la estructura.
-    arrayVotos[i][0] = getCifraSinPuntos(provincias[i].votosPP);
-    arrayVotos[i][1] = getCifraSinPuntos(provincias[i].votosPsoe);
-    arrayVotos[i][2] = getCifraSinPuntos(provincias[i].votosIu);
-    arrayVotos[i][3] = getCifraSinPuntos(provincias[i].votosUpyd);
-    arrayVotos[i][4] = getCifraSinPuntos(provincias[i].votosPodemos);
-    arrayVotos[i][5] = getCifraSinPuntos(provincias[i].votosCiudadanos);
-		printf("%ld\n", getCifraSinPuntos(provincias[i].votosPP));
+    arrayVotos[i][0] = atol(provincias[i].votosPP);
+    arrayVotos[i][1] = atol(provincias[i].votosPsoe);
+    arrayVotos[i][2] = atol(provincias[i].votosIu);
+    arrayVotos[i][3] = atol(provincias[i].votosUpyd);
+    arrayVotos[i][4] = atol(provincias[i].votosPodemos);
+    arrayVotos[i][5] = atol(provincias[i].votosCiudadanos);
+	
   }
 }
 
@@ -271,7 +271,7 @@ void dhondt() {
   int mayor = 0;
   // Recorremos el array de estructuras provincias
   for (i = 0; i < MAX_PROVINCIAS; i++) {
-    double divisionesVotos[provincias[i].diputados][MAX_PARTIDOS];
+    float divisionesVotos[provincias[i].diputados][MAX_PARTIDOS];
     // Este bucle for realiza las divisiones y coloca los numeros en una tabla.
     for (j = 0; j < provincias[i].diputados; j++) {
           divisionesVotos[j][0] = arrayVotos[i][0] / (j + 1);
