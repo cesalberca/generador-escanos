@@ -248,7 +248,85 @@ void importarFichero() {
 }
 
 void rellenarVotosProvincias() {
+  char ch;
+  // size_t strlen(const char *str)
+  ch='.';
   int i;
+  int j;
+  int k;
+  int size;
+  /*
+	Esta serie de algoritmos eliminan los puntos del array, el problema es que al no poder redimensionarlo, se queda un numero muy grande y peta, mas o menos
+	quiza si cuento el numero de puntos que hay por cada char, luego puedo restarle ese valor al tamaño del array. Es decir:
+	PP tiene 1.234.567 votos, al quitarle los puntos se quedaria deberia quedar como  1234567, pero se queda como 121234567, porque el array tiene el mismo tamaño que cuando tenia puntos
+	y rompe las cuentas del dhondt. Puta mierda.
+  */
+  
+  
+  ch='.';
+  
+  for (k = 0; k < MAX_PROVINCIAS; k++){
+	  size = strlen(provincias[k].votosPP);
+	  j = 0;
+	  for(i=0;i<size;i++){
+		if(provincias[k].votosPP[i] != ch){
+			provincias[k].votosPP[j] = provincias[k].votosPP[i];
+			j++;
+		}
+	}
+  }
+  for (k = 0; k < MAX_PROVINCIAS; k++){
+	  size=strlen(provincias[k].votosPsoe);
+	  j = 0;
+	  for(i=0;i<size;i++){
+		if(provincias[k].votosPsoe[i] != ch){
+			provincias[k].votosPsoe[j] = provincias[k].votosPsoe[i];
+			j++;
+		}
+	}
+  }
+  for (k = 0; k < MAX_PROVINCIAS; k++){
+	  size=strlen(provincias[k].votosIu);
+	  j = 0;
+	  for(i=0;i<size;i++){
+		if(provincias[k].votosIu[i] != ch){
+			provincias[k].votosIu[j] = provincias[k].votosIu[i];
+			j++;
+		}
+	}
+  }
+  for (k = 0; k < MAX_PROVINCIAS; k++){
+	  size=strlen(provincias[k].votosUpyd);
+	  j = 0;
+	  for(i=0;i<size;i++){
+		if(provincias[k].votosUpyd[i] != ch){
+			provincias[k].votosUpyd[j] = provincias[k].votosUpyd[i];
+			j++;
+		}
+	}
+  }
+  for (k = 0; k < MAX_PROVINCIAS; k++){
+	  size=strlen(provincias[k].votosPodemos);
+	  j = 0;
+	  for(i=0;i<size;i++){
+		if(provincias[k].votosPodemos[i] != ch){
+			provincias[k].votosPodemos[j] = provincias[k].votosPodemos[i];
+			j++;
+		}
+	}
+  }
+  for (k = 0; k < MAX_PROVINCIAS; k++){
+	  size=strlen(provincias[k].votosCiudadanos);
+	  j = 0;
+	  for(i=0;i<size;i++){
+		if(provincias[k].votosCiudadanos[i] != ch){
+			provincias[k].votosCiudadanos[j] = provincias[k].votosCiudadanos[i];
+			j++;
+		}
+	}
+  }
+  
+	
   for (i = 0; i < MAX_PROVINCIAS; i++) {
     // Llenamos el array con los votos importados en la estructura.
     arrayVotos[i][0] = atol(provincias[i].votosPP);
