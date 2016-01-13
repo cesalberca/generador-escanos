@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "pointeraser.h"
 
@@ -248,83 +249,107 @@ void importarFichero() {
 }
 
 void rellenarVotosProvincias() {
-  char ch;
-  // size_t strlen(const char *str)
-  ch='.';
-  int i;
-  int j;
-  int k;
-  int size;
+  char ch='.';
+  int i, j, k, size;
   /*
 	Esta serie de algoritmos eliminan los puntos del array, el problema es que al no poder redimensionarlo, se queda un numero muy grande y peta, mas o menos
 	quiza si cuento el numero de puntos que hay por cada char, luego puedo restarle ese valor al tamaño del array. Es decir:
 	PP tiene 1.234.567 votos, al quitarle los puntos se quedaria deberia quedar como  1234567, pero se queda como 121234567, porque el array tiene el mismo tamaño que cuando tenia puntos
 	y rompe las cuentas del dhondt. Puta mierda.
   */
-  
-  
+  // long pp = 0;
+  // // 7
+  // // 60
+  // int i;
+  // int j;
+  // int numeroPuntos = 0;
+  // for (i = 0; i < 1; i++) {
+  //   for (j = 0; j < strlen(provincias[i].votosPP); j++) {
+  //     if (provincias[i].votosPP[j] != ch) {
+  //       pp = pp + provincias[i].votosPP[j];
+  //       if (j > 0) {
+  //         int number = atoi(provincias[i].votosPP[j]);
+  //         pp += number * (pow(10, (j - numeroPuntos))));
+  //
+  //       }
+  //     } else {
+  //       numeroPuntos++;
+  //     }
+  //   }
+  //   printf("%ld\n", pp);
+  //   getch();
+  // }
+
+int numeroPuntos = 0;
   for (k = 0; k < MAX_PROVINCIAS; k++){
 	  size = strlen(provincias[k].votosPP);
 	  j = 0;
 	  for(i=0;i<size;i++){
-		if(provincias[k].votosPP[i] != ch){
-			provincias[k].votosPP[j] = provincias[k].votosPP[i];
-			j++;
-		}
+  		if(provincias[k].votosPP[i] != ch){
+  			provincias[k].votosPP[j] = provincias[k].votosPP[i];
+        // votosPP[0] = 1
+        // votosPP[1] = ,
+
+        // nvotosPP[0] = 1
+        // nvotosPP[1] = 0 1
+
+
+  			j++;
+  		}
 	}
+  // }
+  // for (k = 0; k < MAX_PROVINCIAS; k++){
+	//   size=strlen(provincias[k].votosPsoe);
+	//   j = 0;
+	//   for(i=0;i<size;i++){
+	// 	if(provincias[k].votosPsoe[i] != ch){
+	// 		provincias[k].votosPsoe[j] = provincias[k].votosPsoe[i];
+	// 		j++;
+	// 	}
+	// }
+  // }
+  // for (k = 0; k < MAX_PROVINCIAS; k++){
+	//   size=strlen(provincias[k].votosIu);
+	//   j = 0;
+	//   for(i=0;i<size;i++){
+	// 	if(provincias[k].votosIu[i] != ch){
+	// 		provincias[k].votosIu[j] = provincias[k].votosIu[i];
+	// 		j++;
+	// 	}
+	// }
+  // }
+  // for (k = 0; k < MAX_PROVINCIAS; k++){
+	//   size=strlen(provincias[k].votosUpyd);
+	//   j = 0;
+	//   for(i=0;i<size;i++){
+	// 	if(provincias[k].votosUpyd[i] != ch){
+	// 		provincias[k].votosUpyd[j] = provincias[k].votosUpyd[i];
+	// 		j++;
+	// 	}
+	// }
+  // }
+  // for (k = 0; k < MAX_PROVINCIAS; k++){
+	//   size=strlen(provincias[k].votosPodemos);
+	//   j = 0;
+	//   for(i=0;i<size;i++){
+	// 	if(provincias[k].votosPodemos[i] != ch){
+	// 		provincias[k].votosPodemos[j] = provincias[k].votosPodemos[i];
+	// 		j++;
+	// 	}
+	// }
+  // }
+  // for (k = 0; k < MAX_PROVINCIAS; k++){
+	//   size=strlen(provincias[k].votosCiudadanos);
+	//   j = 0;
+	//   for(i=0;i<size;i++){
+	// 	if(provincias[k].votosCiudadanos[i] != ch){
+	// 		provincias[k].votosCiudadanos[j] = provincias[k].votosCiudadanos[i];
+	// 		j++;
+	// 	}
+	// }
   }
-  for (k = 0; k < MAX_PROVINCIAS; k++){
-	  size=strlen(provincias[k].votosPsoe);
-	  j = 0;
-	  for(i=0;i<size;i++){
-		if(provincias[k].votosPsoe[i] != ch){
-			provincias[k].votosPsoe[j] = provincias[k].votosPsoe[i];
-			j++;
-		}
-	}
-  }
-  for (k = 0; k < MAX_PROVINCIAS; k++){
-	  size=strlen(provincias[k].votosIu);
-	  j = 0;
-	  for(i=0;i<size;i++){
-		if(provincias[k].votosIu[i] != ch){
-			provincias[k].votosIu[j] = provincias[k].votosIu[i];
-			j++;
-		}
-	}
-  }
-  for (k = 0; k < MAX_PROVINCIAS; k++){
-	  size=strlen(provincias[k].votosUpyd);
-	  j = 0;
-	  for(i=0;i<size;i++){
-		if(provincias[k].votosUpyd[i] != ch){
-			provincias[k].votosUpyd[j] = provincias[k].votosUpyd[i];
-			j++;
-		}
-	}
-  }
-  for (k = 0; k < MAX_PROVINCIAS; k++){
-	  size=strlen(provincias[k].votosPodemos);
-	  j = 0;
-	  for(i=0;i<size;i++){
-		if(provincias[k].votosPodemos[i] != ch){
-			provincias[k].votosPodemos[j] = provincias[k].votosPodemos[i];
-			j++;
-		}
-	}
-  }
-  for (k = 0; k < MAX_PROVINCIAS; k++){
-	  size=strlen(provincias[k].votosCiudadanos);
-	  j = 0;
-	  for(i=0;i<size;i++){
-		if(provincias[k].votosCiudadanos[i] != ch){
-			provincias[k].votosCiudadanos[j] = provincias[k].votosCiudadanos[i];
-			j++;
-		}
-	}
-  }
-  
-	
+
+
   for (i = 0; i < MAX_PROVINCIAS; i++) {
     // Llenamos el array con los votos importados en la estructura.
     arrayVotos[i][0] = atol(provincias[i].votosPP);
@@ -333,7 +358,7 @@ void rellenarVotosProvincias() {
     arrayVotos[i][3] = atol(provincias[i].votosUpyd);
     arrayVotos[i][4] = atol(provincias[i].votosPodemos);
     arrayVotos[i][5] = atol(provincias[i].votosCiudadanos);
-	
+
   }
 }
 
