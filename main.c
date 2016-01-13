@@ -263,8 +263,6 @@ void rellenarVotosProvincias() {
   */
   
   
-  ch='.';
-  
   for (k = 0; k < MAX_PROVINCIAS; k++){
 	  size = strlen(provincias[k].votosPP);
 	  j = 0;
