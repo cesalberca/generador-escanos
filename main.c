@@ -26,7 +26,7 @@ struct Provincia {
 // Generamos un array de la estructura Provincia.
 struct Provincia provincias[MAX_PROVINCIAS];
 // Ya que los votos son recogidos en forma de caracter, éstos han de ser pasados a int para poder operar con ellos. Los guardamos en un array de int.
-int arrayVotos[MAX_PROVINCIAS][MAX_PARTIDOS];
+long arrayVotos[MAX_PROVINCIAS][MAX_PARTIDOS];
 
 void mostrarMenu();
 void inicializacionDiputados();
@@ -34,10 +34,10 @@ void importarFichero();
 void rellenarVotosProvincias();
 void dhondt();
 void generarHtml();
-int quitarPuntos();
+long quitarPuntos();
 
 struct Provincia madrid = {"Madrid", 36, "0", "0", "0", "0", "0", "0"};
-struct Provincia barcelona = {"Barcelona", 34, "0", "0", "0", "0", "0" ,"0"};
+struct Provincia barcelona = {"Barcelona", 34, "0", "0", "0", "0", "0", "0"};
 struct Provincia valencia = {"Valencia", 16, "0", "0", "0", "0", "0", "0"};
 struct Provincia alicante = {"Alicante", 12, "0", "0", "0", "0", "0", "0"};
 struct Provincia sevilla = {"Sevilla", 12, "0", "0", "0", "0", "0", "0"};
@@ -235,12 +235,41 @@ void importarFichero() {
     for (i = 0; i < MAX_PROVINCIAS; i++) {
       if (strcmp(linea1, provincias[i].nombre) == 0) {
         // Rellenamos cada posición del array de estructuras con los datos importados.
-        strcpy(provincias[i].votosPP, linea3);
-        strcpy(provincias[i].votosPsoe, linea5);
-        strcpy(provincias[i].votosIu, linea7);
-        strcpy(provincias[i].votosUpyd, linea9);
-        strcpy(provincias[i].votosPodemos, linea11);
-        strcpy(provincias[i].votosCiudadanos, linea13);
+        if (strcmp(provincias[i].votosPP, "0") == 0) {
+          strcpy(provincias[i].votosPP, linea3);
+        } else {
+
+        }
+
+        if (strcmp(provincias[i].votosPsoe, "0") == 0) {
+          strcpy(provincias[i].votosPsoe, linea5);
+        } else {
+
+        }
+
+        if (strcmp(provincias[i].votosIu, "0") == 0) {
+          strcpy(provincias[i].votosIu, linea7);
+        } else {
+
+        }
+
+        if (strcmp(provincias[i].votosUpyd, "0") == 0) {
+          strcpy(provincias[i].votosUpyd, linea9);
+        } else {
+
+        }
+
+        if (strcmp(provincias[i].votosPodemos, "0") == 0) {
+          strcpy(provincias[i].votosPodemos, linea11);
+        } else {
+
+        }
+
+        if (strcmp(provincias[i].votosCiudadanos, "0") == 0) {
+          strcpy(provincias[i].votosCiudadanos, linea13);
+        } else {
+
+        }
       }
     }
   } while((eofReturn != EOF));
@@ -252,13 +281,14 @@ void rellenarVotosProvincias() {
   int i;
   for (i = 0; i < MAX_PROVINCIAS; i++) {
     // Llenamos el array con los votos importados en la estructura.
-    // printf("%s\n", provincias[i].votosPP);
+    // printf("%ld\n", provincias[i].votosPP);
     arrayVotos[i][0] = quitarPuntos(provincias[i].votosPP);
     arrayVotos[i][1] = quitarPuntos(provincias[i].votosPsoe);
     arrayVotos[i][2] = quitarPuntos(provincias[i].votosIu);
     arrayVotos[i][3] = quitarPuntos(provincias[i].votosUpyd);
     arrayVotos[i][4] = quitarPuntos(provincias[i].votosPodemos);
     arrayVotos[i][5] = quitarPuntos(provincias[i].votosCiudadanos);
+    getch();
   }
 }
 
@@ -272,7 +302,7 @@ void dhondt() {
   int mayor = 0;
   // Recorremos el array de estructuras provincias
   for (i = 0; i < MAX_PROVINCIAS; i++) {
-    float divisionesVotos[provincias[i].diputados][MAX_PARTIDOS];
+    double divisionesVotos[provincias[i].diputados][MAX_PARTIDOS];
     // Este bucle for realiza las divisiones y coloca los numeros en una tabla.
     for (j = 0; j < provincias[i].diputados; j++) {
           divisionesVotos[j][0] = arrayVotos[i][0] / (j + 1);
@@ -425,25 +455,26 @@ void generarHtml() {
   getch();
 }
 
-int quitarPuntos(char *cadenaConPuntos) {
+long quitarPuntos(char *cadenaConPuntos) {
   int i=0;//Iterador del array de origen
 	int iArrayDestino=0;//Iterador del array de destino
 	char sCifraSP[100];//Array de char con la cifra Sin Puntos
-	int lCifra;//Cifra destino
+	long lCifra;//Cifra destino
 
-  if(strcmp(cadenaConPuntos, "0") == 0) {
-    strcpy(sCifraSP, "0");
-  } else {
+  if(strcmp(cadenaConPuntos, "0") != 0) {
     for (i=0;i<strlen(cadenaConPuntos);i++){
-  		if (cadenaConPuntos[i]!='.') {
-  			sCifraSP[iArrayDestino]=cadenaConPuntos[i];
-  			iArrayDestino++;
-        // printf("%c\n", sCifraSP[i]);
-  		}
-  	}
+      if (cadenaConPuntos[i]!='.') {
+        sCifraSP[iArrayDestino]=cadenaConPuntos[i];
+        iArrayDestino++;
+        // printf("%c", sCifraSP[i]);
+      }
+    }
+  } else {
+    strcpy(sCifraSP, "0");
   }
 
 	lCifra = atol(sCifraSP);
-  printf("%i\n", lCifra);
+  // lCifra = strtol(sCifraSP,NULL,10);
+  printf("Long quitarPuntos %ld\n", lCifra);
 	return lCifra;
 }
