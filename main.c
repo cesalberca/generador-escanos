@@ -34,58 +34,59 @@ void importarFichero();
 void rellenarVotosProvincias();
 void dhondt();
 void generarHtml();
+int quitarPuntos();
 
-struct Provincia madrid = {"Madrid", 36};
-struct Provincia barcelona = {"Barcelona", 34};
-struct Provincia valencia = {"Valencia", 16};
-struct Provincia alicante = {"Alicante", 12};
-struct Provincia sevilla = {"Sevilla", 12};
-struct Provincia malaga = {"Malaga", 10};
-struct Provincia murcia = {"Murcia", 10};
-struct Provincia cadiz = {"Cadiz", 8};
-struct Provincia vizcaya = {"Vizcaya", 8};
-struct Provincia laCoruna = {"La Coruna", 8};
-struct Provincia palmas = {"Las Palmas", 8};
-struct Provincia asturias = {"Asturias", 8};
-struct Provincia tenerife = {"Santa Cruz de Tenerife", 7};
-struct Provincia zaragoza = {"Zaragoza", 7};
-struct Provincia pontevedra = {"Pontevedra", 7};
-struct Provincia granada = {"Granada", 7};
-struct Provincia tarragona = {"Tarragona", 6};
-struct Provincia cordoba = {"Cordoba", 6};
-struct Provincia gerona = {"Gerona", 6};
-struct Provincia guipuzcoa = {"Guipuzcoa", 6};
-struct Provincia toledo = {"Toledo", 6};
-struct Provincia almeria = {"Almeria", 6};
-struct Provincia badajoz = {"Badajoz", 6};
-struct Provincia jaen = {"Jaen", 6};
-struct Provincia navarra = {"Navarra", 5};
-struct Provincia castellon = {"Castellon", 5};
-struct Provincia cantabria = {"Cantabria", 5};
-struct Provincia valladolid = {"Valladolid", 5};
-struct Provincia ciudadReal = {"Ciudad Real", 5};
-struct Provincia huelva = {"Huelva", 5};
-struct Provincia leon = {"Leon", 5};
-struct Provincia lerida = {"Lerida", 4};
-struct Provincia caceres = {"Caceres", 4};
-struct Provincia albacete = {"Albacete", 4};
-struct Provincia burgos = {"Burgos", 4};
-struct Provincia salamanca = {"Salamanca", 4};
-struct Provincia lugo = {"Lugo", 4};
-struct Provincia orense = {"Orense", 4};
-struct Provincia laRioja = {"La Rioja", 4};
-struct Provincia alava = {"Alava", 4};
-struct Provincia guadalajara = {"Guadalajara", 3};
-struct Provincia huesca = {"Huesca", 3};
-struct Provincia cuenca = {"Cuenca", 3};
-struct Provincia zamora = {"Zamora", 3};
-struct Provincia avila = {"Avila", 3};
-struct Provincia palencia = {"Palencia", 3};
-struct Provincia segovia = {"Segovia", 3};
-struct Provincia teruel = {"Teruel", 3};
-struct Provincia soria = {"Soria", 2};
-struct Provincia ceuta = {"Ceuta", 1};
-struct Provincia melilla = {"Melilla", 1};
+struct Provincia madrid = {"Madrid", 36, "0", "0", "0", "0", "0", "0"};
+struct Provincia barcelona = {"Barcelona", 34, "0", "0", "0", "0", "0" ,"0"};
+struct Provincia valencia = {"Valencia", 16, "0", "0", "0", "0", "0", "0"};
+struct Provincia alicante = {"Alicante", 12, "0", "0", "0", "0", "0", "0"};
+struct Provincia sevilla = {"Sevilla", 12, "0", "0", "0", "0", "0", "0"};
+struct Provincia malaga = {"Malaga", 10, "0", "0", "0", "0", "0", "0"};
+struct Provincia murcia = {"Murcia", 10, "0", "0", "0", "0", "0", "0"};
+struct Provincia cadiz = {"Cadiz", 8, "0", "0", "0", "0", "0", "0"};
+struct Provincia vizcaya = {"Vizcaya", 8, "0", "0", "0", "0", "0", "0"};
+struct Provincia laCoruna = {"La Coruna", 8, "0", "0", "0", "0", "0", "0"};
+struct Provincia palmas = {"Las Palmas", 8, "0", "0", "0", "0", "0", "0"};
+struct Provincia asturias = {"Asturias", 8, "0", "0", "0", "0", "0", "0"};
+struct Provincia tenerife = {"Santa Cruz de Tenerife", 7, "0", "0", "0", "0", "0", "0"};
+struct Provincia zaragoza = {"Zaragoza", 7, "0", "0", "0", "0", "0", "0"};
+struct Provincia pontevedra = {"Pontevedra", 7, "0", "0", "0", "0", "0", "0"};
+struct Provincia granada = {"Granada", 7, "0", "0", "0", "0", "0", "0"};
+struct Provincia tarragona = {"Tarragona", 6, "0", "0", "0", "0", "0", "0"};
+struct Provincia cordoba = {"Cordoba", 6, "0", "0", "0", "0", "0", "0"};
+struct Provincia gerona = {"Gerona", 6, "0", "0", "0", "0", "0", "0"};
+struct Provincia guipuzcoa = {"Guipuzcoa", 6, "0", "0", "0", "0", "0", "0"};
+struct Provincia toledo = {"Toledo", 6, "0", "0", "0", "0", "0", "0"};
+struct Provincia almeria = {"Almeria", 6, "0", "0", "0", "0", "0", "0"};
+struct Provincia badajoz = {"Badajoz", 6, "0", "0", "0", "0", "0", "0"};
+struct Provincia jaen = {"Jaen", 6, "0", "0", "0", "0", "0", "0"};
+struct Provincia navarra = {"Navarra", 5, "0", "0", "0", "0", "0", "0"};
+struct Provincia castellon = {"Castellon", 5, "0", "0", "0", "0", "0", "0"};
+struct Provincia cantabria = {"Cantabria", 5, "0", "0", "0", "0", "0", "0"};
+struct Provincia valladolid = {"Valladolid", 5, "0", "0", "0", "0", "0", "0"};
+struct Provincia ciudadReal = {"Ciudad Real", 5, "0", "0", "0", "0", "0", "0"};
+struct Provincia huelva = {"Huelva", 5, "0", "0", "0", "0", "0", "0"};
+struct Provincia leon = {"Leon", 5, "0", "0", "0", "0", "0", "0"};
+struct Provincia lerida = {"Lerida", 4, "0", "0", "0", "0", "0", "0"};
+struct Provincia caceres = {"Caceres", 4, "0", "0", "0", "0", "0", "0"};
+struct Provincia albacete = {"Albacete", 4, "0", "0", "0", "0", "0", "0"};
+struct Provincia burgos = {"Burgos", 4, "0", "0", "0", "0", "0", "0"};
+struct Provincia salamanca = {"Salamanca", 4, "0", "0", "0", "0", "0", "0"};
+struct Provincia lugo = {"Lugo", 4, "0", "0", "0", "0", "0", "0"};
+struct Provincia orense = {"Orense", 4, "0", "0", "0", "0", "0", "0"};
+struct Provincia laRioja = {"La Rioja", 4, "0", "0", "0", "0", "0", "0"};
+struct Provincia alava = {"Alava", 4, "0", "0", "0", "0", "0", "0"};
+struct Provincia guadalajara = {"Guadalajara", 3, "0", "0", "0", "0", "0", "0"};
+struct Provincia huesca = {"Huesca", 3, "0", "0", "0", "0", "0", "0"};
+struct Provincia cuenca = {"Cuenca", 3, "0", "0", "0", "0", "0", "0"};
+struct Provincia zamora = {"Zamora", 3, "0", "0", "0", "0", "0", "0"};
+struct Provincia avila = {"Avila", 3, "0", "0", "0", "0", "0", "0"};
+struct Provincia palencia = {"Palencia", 3, "0", "0", "0", "0", "0", "0"};
+struct Provincia segovia = {"Segovia", 3, "0", "0", "0", "0", "0", "0"};
+struct Provincia teruel = {"Teruel", 3, "0", "0", "0", "0", "0", "0"};
+struct Provincia soria = {"Soria", 2, "0", "0", "0", "0", "0", "0"};
+struct Provincia ceuta = {"Ceuta", 1, "0", "0", "0", "0", "0", "0"};
+struct Provincia melilla = {"Melilla", 1, "0", "0", "0", "0", "0", "0"};
 
 int main(int argc, char *argv[]) {
   provincias[0] = madrid;
@@ -170,7 +171,7 @@ int main(int argc, char *argv[]) {
 }
 
 void mostrarMenu() {
-  system("cls");
+  // system("cls");
   puts("1. Importar archivo");
   puts("2. Exportar archivo");
   puts("3. Salir");
@@ -206,7 +207,7 @@ void importarFichero() {
 
   puts("Introduce el nombre del archivo txt a importar. No hace falta que pongas la extension:");
   scanf("%s", nombre);
-  system("cls");
+  // system("cls");
   puts("Datos importados con exito, pulse una tecla para continuar...");
   getch();
   // Concatenamos el nombre con .txt
@@ -251,13 +252,13 @@ void rellenarVotosProvincias() {
   int i;
   for (i = 0; i < MAX_PROVINCIAS; i++) {
     // Llenamos el array con los votos importados en la estructura.
-    arrayVotos[i][0] = atol(provincias[i].votosPP);
-    arrayVotos[i][1] = atol(provincias[i].votosPsoe);
-    arrayVotos[i][2] = atol(provincias[i].votosIu);
-    arrayVotos[i][3] = atol(provincias[i].votosUpyd);
-    arrayVotos[i][4] = atol(provincias[i].votosPodemos);
-    arrayVotos[i][5] = atol(provincias[i].votosCiudadanos);
-	
+    // printf("%s\n", provincias[i].votosPP);
+    arrayVotos[i][0] = quitarPuntos(provincias[i].votosPP);
+    arrayVotos[i][1] = quitarPuntos(provincias[i].votosPsoe);
+    arrayVotos[i][2] = quitarPuntos(provincias[i].votosIu);
+    arrayVotos[i][3] = quitarPuntos(provincias[i].votosUpyd);
+    arrayVotos[i][4] = quitarPuntos(provincias[i].votosPodemos);
+    arrayVotos[i][5] = quitarPuntos(provincias[i].votosCiudadanos);
   }
 }
 
@@ -281,7 +282,7 @@ void dhondt() {
           divisionesVotos[j][4] = arrayVotos[i][4] / (j + 1);
           divisionesVotos[j][5] = arrayVotos[i][5] / (j + 1);
     }
-    // Recorremso la tabla en busca del numero del resultado de la division de los votos mas alta.
+    // Recorremos la tabla en busca del numero del resultado de la division de los votos mas alta.
     for (k = 0; k < provincias[i].diputados; k++) {
       mayor = 0;
       for (l = 0; l < MAX_PARTIDOS; l++) {
@@ -419,7 +420,30 @@ void generarHtml() {
   fputs("</html>\n", ficheroHtml);
 
   fclose(ficheroHtml);
-  system("cls");
+  // system("cls");
   puts("Datos exportados con exito, pulse una tecla para continuar...");
   getch();
+}
+
+int quitarPuntos(char *cadenaConPuntos) {
+  int i=0;//Iterador del array de origen
+	int iArrayDestino=0;//Iterador del array de destino
+	char sCifraSP[100];//Array de char con la cifra Sin Puntos
+	int lCifra;//Cifra destino
+
+  if(strcmp(cadenaConPuntos, "0") == 0) {
+    strcpy(sCifraSP, "0");
+  } else {
+    for (i=0;i<strlen(cadenaConPuntos);i++){
+  		if (cadenaConPuntos[i]!='.') {
+  			sCifraSP[iArrayDestino]=cadenaConPuntos[i];
+  			iArrayDestino++;
+        // printf("%c\n", sCifraSP[i]);
+  		}
+  	}
+  }
+
+	lCifra = atol(sCifraSP);
+  printf("%i\n", lCifra);
+	return lCifra;
 }
