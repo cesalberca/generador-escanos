@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "pointeraser.h"
-
 FILE *ficheroImportado;
 FILE *ficheroHtml;
 
@@ -25,7 +23,6 @@ long arrayVotos[MAX_PROVINCIAS][MAX_PARTIDOS];
 void mostrarMenu();
 void inicializacionDiputados();
 void importarFichero();
-void imprimirArrayVotos();
 void dhondt();
 void generarHtml();
 long quitarPuntos();
@@ -151,7 +148,6 @@ int main(int argc, char *argv[]) {
       case 1:
         inicializacionDiputados();
         importarFichero();
-        // imprimirArrayVotos();
         dhondt();
         break;
       case 2:
@@ -165,7 +161,7 @@ int main(int argc, char *argv[]) {
 }
 
 void mostrarMenu() {
-  // system("cls");
+  system("cls");
   puts("1. Importar archivo");
   puts("2. Exportar archivo");
   puts("3. Salir");
@@ -201,7 +197,7 @@ void importarFichero() {
 
   puts("Introduce el nombre del archivo txt a importar. No hace falta que pongas la extension:");
   scanf("%s", nombre);
-  // system("cls");
+  system("cls");
   puts("Datos importados con exito, pulse una tecla para continuar...");
   getch();
   // Concatenamos el nombre con .txt
@@ -242,19 +238,6 @@ void importarFichero() {
   fclose(ficheroImportado);
 }
 
-void imprimirArrayVotos() {
-  int i;
-  for (i = 0; i < MAX_PROVINCIAS; i++) {
-    int j;
-    for (j = 0; j < 6; j++) {
-      if (arrayVotos[i][j] != 0) {
-        printf("%ld\n", arrayVotos[i][j]);
-      }
-    }
-    printf("----\n");
-  }
-}
-
 void dhondt() {
   int i;
   int j;
@@ -293,23 +276,23 @@ void dhondt() {
       if (arrayVotos[i][mayor] != 0) {
         switch (mayor) {
           case 0:
-          provincias[i].diputadosArray[0] += 1;
-          break;
+            provincias[i].diputadosArray[0] += 1;
+            break;
           case 1:
-          provincias[i].diputadosArray[1] += 1;
-          break;
+            provincias[i].diputadosArray[1] += 1;
+            break;
           case 2:
-          provincias[i].diputadosArray[2] += 1;
-          break;
+            provincias[i].diputadosArray[2] += 1;
+            break;
           case 3:
-          provincias[i].diputadosArray[3] += 1;
-          break;
+            provincias[i].diputadosArray[3] += 1;
+            break;
           case 4:
-          provincias[i].diputadosArray[4] += 1;
-          break;
+            provincias[i].diputadosArray[4] += 1;
+            break;
           case 5:
-          provincias[i].diputadosArray[5] += 1;
-          break;
+            provincias[i].diputadosArray[5] += 1;
+            break;
         }
       }
     }
@@ -413,7 +396,7 @@ void generarHtml() {
   fputs("</html>\n", ficheroHtml);
 
   fclose(ficheroHtml);
-  // system("cls");
+  system("cls");
   puts("Datos exportados con exito, pulse una tecla para continuar...");
   getch();
 }
@@ -424,19 +407,15 @@ long quitarPuntos(char *cadenaConPuntos) {
 	char sCifraSP[100];//Array de char con la cifra Sin Puntos
 	long lCifra;//Cifra destino
 
-    for (i=0;i<strlen(cadenaConPuntos);i++){
-      if (cadenaConPuntos[i]!='.') {
-        sCifraSP[iArrayDestino]=cadenaConPuntos[i];
-        iArrayDestino++;
-      }
-    }
+  // Este programa se lo dedicamos al =
+  for (i=0;i<=strlen(cadenaConPuntos);i++){
+		if (cadenaConPuntos[i]!='.') {
+			sCifraSP[iArrayDestino]=cadenaConPuntos[i];
+			iArrayDestino++;
+		}
+	}
 
-  printf("len: %i\n", strlen(cadenaConPuntos));
-  printf("len: %i\n", strlen(sCifraSP));
-  printf("%s\n", sCifraSP);
+	lCifra = atol(sCifraSP);
 
-	// lCifra = atol(sCifraSP);
-  lCifra = strtol(sCifraSP,NULL,10);
-  printf("Long quitarPuntos %ld\n", lCifra);
 	return lCifra;
 }
